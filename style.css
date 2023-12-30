@@ -1,0 +1,125 @@
+body{
+    background-color: #071D1D;
+    
+}
+
+h1{
+    font-family: 'Federo', sans-serif;
+    text-align: center;
+    color: #F8F8F8;
+    font-size: 75px;
+    font-weight: 100
+}
+
+button{
+background-color: #071D1D;
+border-color: #F8F8F8;
+color: #F8F8F8;
+padding: 7px;
+font-family: 'Arsenal', sans-serif;
+
+}
+
+button:hover{
+background-color: #F8F8F8;
+border-color: #071D1D;
+color: #000000;
+padding: 7px;
+}
+
+#playbtn{
+float: right;
+margin-top: 30%;
+margin-bottom: 50%;
+margin-right: 40px;
+
+padding-top: 10px;
+padding-bottom: 10px;
+padding-right: 15px;
+padding-left: 15px;
+
+font-size: 30px;
+}
+.all{
+    align-items: center;
+    justify-content: center;
+}
+
+.gamecont{
+    width: 740px;
+    height: 500px;
+    position: absolute;
+    left: 25%;
+}
+
+.separation{
+    background-color: #ffffff1c;
+    color: #000000;
+    border: none;
+    height: 2px;
+}
+
+#randomword{
+    color: #F8F8F8;
+    font-size: 35px;
+}
+
+#auxwordansware{
+    color: #F8F8F8;
+
+}
+
+#WordAndAnswareCont{
+    position: absolute;
+    z-index: 1;
+    float: right;
+    width: 250px;
+    align-items: center;
+    text-align: center;
+    display: none;
+}
+
+#userform{
+    margin-top: 40px;
+    font-family: 'Arsenal', sans-serif;
+    display: block;
+    color: #F8F8F8;
+    align-items: center;
+    text-align: center;
+    float: right;
+    margin-top: 2%;
+}
+
+#Hangmanimage{
+float: left;
+width: 380px;
+overflow: hidden;
+position: absolute;
+}
+
+.elementInitial{
+    margin-top: 20%;
+    margin-left: 60%;
+    margin-right: 20%;
+    text-align: center;
+    align-items: center;
+}
+
+#playername{
+    color: #F8F8F8;
+    float: right;
+    font-family: 'Arsenal', sans-serif;
+}
+
+
+#letterscont{
+    display: none;
+    width: 335px;
+    height: 70px;
+    margin-left: 54%;
+    margin-top: 40%;
+}
+
+#username{
+    border-color: #93B09D;
+}
