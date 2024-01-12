@@ -58,19 +58,50 @@ const colorsArray = [
     "Russia",
     "Italy",
   ];
-
+let playerName;
   function startfunct(){
-    gameStart();
+     playerName = updatePlayerName();
+    if (playerName !== "") {
+       gameStart();
+    }
   }
 
   function updatePlayerName() {
     const usernameInput = document.getElementById("username");
-
     const username = usernameInput.value;
-
+   
     const playerNameParagraph = document.getElementById("playername");
-    playerNameParagraph.textContent = "Player: " + username;
+    if(username !==""){
+      playerNameParagraph.textContent = "Player: " + username;
+    }else{
+      alert("Please enter a valid name");
+      usernameInput.style.backgroundColor="#E75C65";
+    }
+    return username;
+   }
+   
+
+  let randomArrayIndex = Math.floor(Math.random() * 3);
+  let answare = document.getElementById("auxwordansware");
+
+  let randomWord;
+  switch (randomArrayIndex) {
+    case 0:
+      randomWord = getRandomWord(countriesArray);
+      answare.innerHTML = "Country";
+      break;
+    case 1:
+      randomWord = getRandomWord(fruitsArray);
+      answare.innerHTML = "Fruit";
+      break;
+    case 2:
+      randomWord = getRandomWord(colorsArray);
+      answare.innerHTML = "Color";
+      break;
+    default:
+      console.error("Unexpected array index");
   }
+
 
   function getRandomWord(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
@@ -78,17 +109,15 @@ const colorsArray = [
   }
 
   const paragraphElement = document.getElementById("randomword");
-  const answare = document.getElementById("auxwordansware");
 
-  const randomWord = getRandomWord(countriesArray);
   underscores = "_ ".repeat(randomWord.length);
   paragraphElement.innerHTML = underscores;
-  answare.innerHTML = randomWord;
+  //answare.innerHTML = randomWord;
 
   function updateUnderscores() {
     underscores = "_ ".repeat(randomWord.length);
     paragraphElement.innerHTML = underscores;
-    answare.innerHTML = randomWord;
+    //answare.innerHTML = randomWord;
 
   }
 
@@ -104,7 +133,6 @@ function initiateImage() {
 }
 
 function gameStart() {
-    updatePlayerName();
 
     var btnstart = document.getElementById('playbtn');
     btnstart.style.display = 'none';
@@ -125,9 +153,8 @@ function gameStart() {
 
     initiateImage();
 
-    randomWord = getRandomWord(countriesArray);
     updateUnderscores();
-    answare.innerHTML = randomWord;
+   // answare.innerHTML = randomWord;
 }
 
 
@@ -142,7 +169,8 @@ function fillAlphabet() {
       letterButton.classList.add("letter-btn");
 
       letterButton.addEventListener("click", function() {
-        letterButton.style.display='none';
+        letterButton.disabled=true;
+        letterButton.style.backgroundColor="grey";
         checkLetterInWord(letter);
       });
       lettersCont.appendChild(letterButton);
@@ -152,7 +180,10 @@ function fillAlphabet() {
   function checkLetterInWord(clickedLetter) {
     const lowercasedRandomWord = randomWord.toLowerCase();
     const lowercasedClickedLetter = clickedLetter.toLowerCase();
-  
+    var winlose = document.getElementById("winlose");
+    var endtittle = document.getElementById("endtittle");
+    var randomword = document.getElementById("randomword");
+
     if (lowercasedRandomWord.includes(lowercasedClickedLetter)) {
       for (let i = 0; i < randomWord.length; i++) {
         if (randomWord[i].toLowerCase() === lowercasedClickedLetter) {
@@ -168,8 +199,11 @@ function fillAlphabet() {
       if (currentImageIndex < images.length) {
         initiateImage();
       } else {
-        console.log("Game over!"); // Handle game over logic here
-        alert('Game Over')
+        console.log("Game over!"); 
+        winlose.style.display='block';
+        endtittle.textContent = ""+playerName+" You lost!";
+        randomword.textContent = "The word was "+randomWord+" .";
+
       }
     }
   }

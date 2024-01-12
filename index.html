@@ -5,34 +5,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Arsenal&family=Federo&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hangman</title>
+    <title>Hangman - Javascript</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Hangman</h1>
+    <div class="pagec">
+        <h1>Hangman</h1>
 
-<div class="all">
-    <div class="gamecont">
-        <hr class="separation">
-        <p id="playername"></p>
-
-        <div id="Hangmanimage"></div>
-
-        <div class="elementInitial">
-            <div id="userform">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-                <br>
-                <button type="submit" id="playbtn" onclick="startfunct();">Play</button>
-            </div>
-            <div id="WordAndAnswareCont">
-                <p id="auxwordansware"></p>
-                <p id="randomword"></p>
+        <div class="all">
+            <div class="gamecont">
+                <hr class="separation">
+                <p id="playername"></p>
+        
+                <div id="Hangmanimage"></div>
+        
+                <div class="elementInitial">
+                    <div id="userform">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                        <br>
+                        <button type="submit" id="playbtn" onclick="startfunct();">Play</button>
+                    </div>
+                    <div id="WordAndAnswareCont">
+                        <p id="auxwordansware"></p>
+                        <p id="randomword"></p>
+                    </div>
+                </div>
+                <div id="letterscont"></div>
+            
+                <div id="winlose" class="winlose">
+                    <h1 id="endtittle"></h1>
+                    <hr class="separation">
+                    <p id="randomword"></p>
+                </div>
             </div>
         </div>
-        <div id="letterscont"></div>
     </div>
-</div>
+   
     <script src="script.js"></script>
 </body>
 </html>
