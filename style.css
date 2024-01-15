@@ -53,15 +53,30 @@ font-size: 30px;
 }
 
 .separation{
-    background-color: #ffffff1c;
+    background-color: #ffffff55;
     color: #000000;
     border: none;
     height: 2px;
 }
 
+.subseparation{
+    background-color: #ffffff61;
+    color: #000000;
+    border: none;
+    height: 2px;
+    width: 40px;
+}
+
 #randomword{
     color: #F8F8F8;
     font-size: 35px;
+}
+
+#randomwordfinal{
+    color: #F8F8F8;
+    font-size: 35px;
+            align-items: center;
+    justify-content: center;
 }
 
 #auxwordansware{
@@ -133,10 +148,25 @@ position: absolute;
     left: 0;
         align-items: center;
     justify-content: center;
-    padding: 35px;
+    padding: 25px;
     backdrop-filter: blur(10px);
  }
+
+
+ .winlose div {
+    text-align: center;
+    display: block;
+    margin-bottom: 20%;
+
+}
  
  #endtittle{
     font-size: 40px
+ }
+
+ #wordinfo{
+    color: #F8F8F8;
+    font-size: 25px;
+    align-items: center;
+    justify-content: center;
  }
