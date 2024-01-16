@@ -1,6 +1,12 @@
 const hangmanImageDiv = document.getElementById("Hangmanimage");
 var images = ['images/hangman7.png','images/hangman6.png','images/hangman5.png','images/hangman4.png','images/hangman3.png','images/hangman2.png','images/hangman.png'];
 let currentImageIndex = 0;
+var answare = document.getElementById("auxwordansware");
+let randomArrayIndex = Math.floor(Math.random() * 3);
+let randomWord;
+let playerName;
+let usernameInput = document.getElementById("username");
+let playerNameParagraph = document.getElementById("playername");
 const fruitsArray = ["apple","orange","banana","grape","kiwi","mango","strawberry","watermelon","pineapple","pear","cherry","peach"];
 const fruitInfoArray = [
    "Apples are a type of fruit that grow on trees.",
@@ -16,6 +22,21 @@ const fruitInfoArray = [
    "Cherries are small, tart fruits that are native to Asia.",
    "Peaches are large, soft fruits that are native to China."
 ];
+const fruitimagesarray = [
+  'images/imageswords/Fruit/apple.jpg',
+  'images/imageswords/Fruit/orange.jpg',
+  'images/imageswords/Fruit/banana.jpg',
+  'images/imageswords/Fruit/grape.jpg',
+  'images/imageswords/Fruit/kiwi.jpg',
+  'images/imageswords/Fruit/mango.jpg',
+  'images/imageswords/Fruit/strawberry.jpg',
+  'images/imageswords/Fruit/watermelon.jpg',
+  'images/imageswords/Fruit/pineapple.jpg',
+  'images/imageswords/Fruit/pear.jpg',
+  'images/imageswords/Fruit/cherry.jpg',
+  'images/imageswords/Fruit/peach.jpg'
+];
+
 const colorsArray = ["red","blue","green","yellow","purple","orange","pink","brown","gray","teal","maroon","cyan"];
 const colorsInfoArray = [
   "Red is a primary color in the RGB color model.",
@@ -32,6 +53,20 @@ const colorsInfoArray = [
   "Cyan is a light blue-green color."
 ];
 
+const colorimagesarray = [
+  'images/imageswords/color/red.jpg',
+  'images/imageswords/color/blue.jpg',
+  'images/imageswords/color/green.jpg',
+  'images/imageswords/color/yellow.jpg',
+  'images/imageswords/color/purple.jpg',
+  'images/imageswords/color/orange.jpg',
+  'images/imageswords/color/pink.jpg',
+  'images/imageswords/color/brown.jpg',
+  'images/imageswords/color/gray.jpg',
+  'images/imageswords/color/teal.jpg',
+  'images/imageswords/color/maroon.jpg',
+  'images/imageswords/color/cyan.jpg'
+];
 const countriesArray = ["USA","Canada","France","Japan","Australia","Brazil","India","Mexico","Germany","Spain","Russia","Italy"];
 const countryInfoArray = [
   "The United States is the third largest country by land area.",
@@ -48,52 +83,156 @@ const countryInfoArray = [
   "Italy is known for its art, fashion, and food."
 ];
 
-var answare = document.getElementById("auxwordansware");
-let randomArrayIndex = Math.floor(Math.random() * 3);
-let randomWord;
-let playerName;
+const countryimagesarray = [
+  'images/imageswords/country/USA.jpg',
+  'images/imageswords/country/Canada.jpg',
+  'images/imageswords/country/France.jpg',
+  'images/imageswords/country/Japan.jpg',
+  'images/imageswords/country/Australia.jpg',
+  'images/imageswords/country/Brazil.jpg',
+  'images/imageswords/country/India.jpg',
+  'images/imageswords/country/Mexico.jpg',
+  'images/imageswords/country/Germany.jpg',
+  'images/imageswords/country/Spain.jpg',
+  'images/imageswords/country/Russia.jpg',
+  'images/imageswords/country/Italy.jpg'
+];
+
+let selectedLetters = []; 
+
+function setCookie(name,value,days) {
+  var expires = "";
+  if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return "";
+}
+
+function saveGameState() {
+  setCookie("currentImageIndex", currentImageIndex, 1);
+  setCookie("randomWord", randomWord, 1);
+  setCookie("underscores", underscores, 1);
+  setCookie("selectedLetters", JSON.stringify(selectedLetters), 1);
+}
+
+// Función para cargar el estado del juego desde una cookie
+function loadGameState() {
+  currentImageIndex = parseInt(getCookie("currentImageIndex")) || 0;
+  randomWord = getCookie("randomWord") || getRandomWord(countriesArray);
+  underscores = getCookie("underscores") || "_ ".repeat(randomWord.length);
+  selectedLetters = JSON.parse(getCookie("selectedLetters")) || [];
+}
+
+// Function to reset game state
+function resetGameState() {
+  currentImageIndex = 0;
+  randomWord = getRandomWord(countriesArray);
+  underscores = "_ ".repeat(randomWord.length);
+}
+
+// Function to start or resume the game
+function startOrResumeGame() {
+  loadGameState();
+  playerName = getCookie("playername") || updatePlayerName();
+
+  if (playerName !== "") {
+    playerNameParagraph.textContent = "Player: " + playerName;
+    gameStart();
+  }
+}
+
 /////////////////////////////////////////////////////////////////////////////////
-  function startfunct(){
-     playerName = updatePlayerName();
-    if (playerName !== "") {
-       gameStart();
-    }
+
+function startfunct(){
+  let savedPlayerName = getCookie("playername");
+
+  if (savedPlayerName !== "") {
+      playerName = savedPlayerName;
+      playerNameParagraph.textContent = "Player: " + savedPlayerName;
+
+
+  } else {
+      playerName = updatePlayerName();
+      if (playerName !== "") {
+          setCookie("playername", playerName, 1);
+      }
   }
 
+  if (playerName !== "") {
+      gameStart();
+  }
+}
+
+
   function updatePlayerName() {
-    const usernameInput = document.getElementById("username");
-    const username = usernameInput.value;
+    let username = usernameInput.value;
    
-    const playerNameParagraph = document.getElementById("playername");
+
     if(username !==""){
       playerNameParagraph.textContent = "Player: " + username;
     }else{
       alert("Please enter a valid name");
       usernameInput.style.backgroundColor="#E75C65";
     }
+
     return username;
    }
    
 
 
    function selectRandomCategory() {
-    switch (randomArrayIndex) {
-      case 0:
-        randomWord = getRandomWord(countriesArray);
-        displayInfo("Country");
-        break;
-      case 1:
-        randomWord = getRandomWord(fruitsArray);
-        displayInfo("Fruit");
-        break;
-      case 2:
-        randomWord = getRandomWord(colorsArray);
-        displayInfo("Color");
-        break;
-      default:
-        console.error("Unexpected array index");
+    const savedRandomWord = getCookie("randomWord");
+  
+    if (savedRandomWord) {
+      randomWord = savedRandomWord;
+      displayInfo(getCategoryFromWord(randomWord));
+    } else {
+      // If randomWord is not saved in cookies, generate a new one
+      switch (randomArrayIndex) {
+        case 0:
+          randomWord = getRandomWord(countriesArray);
+          break;
+        case 1:
+          randomWord = getRandomWord(fruitsArray);
+          break;
+        case 2:
+          randomWord = getRandomWord(colorsArray);
+          break;
+        default:
+          console.error("Unexpected array index");
+      }
+      
+      setCookie("randomWord", randomWord, 1);
+      displayInfo(getCategoryFromWord(randomWord));
     }
   }
+
+  function getCategoryFromWord(word) {
+    if (countriesArray.includes(word.toLowerCase())) {
+      return "Country";
+    } else if (fruitsArray.includes(word.toLowerCase())) {
+      return "Fruit";
+    } else if (colorsArray.includes(word.toLowerCase())) {
+      return "Color";
+    } else {
+      console.error("Unexpected category");
+      return "";
+    }
+  }
+
   
   function getRandomWord(array) {
     return array[Math.floor(Math.random() * array.length)];
@@ -101,28 +240,38 @@ let playerName;
   
 
   let wordInfo;
+  let wordimage;
   function displayInfo(category) {
     answare.innerHTML = category;
     // Get the information based on the selected category
     let infoArray;
+    let imagearray;
     switch (category) {
       case "Country":
         infoArray = countryInfoArray;
+        imagearray = countryimagesarray;
         break;
       case "Fruit":
         infoArray = fruitInfoArray;
+        imagearray = fruitimagesarray;
         break;
       case "Color":
         infoArray = colorsInfoArray;
+        imagearray = colorimagesarray;
         break;
       default:
         console.error("Unexpected category");
         return;
     }
+    
+    const infoIndeximage = arrayIndexOf(imagearray, randomWord);
+    wordimage = imagearray[infoIndeximage];
+   console.log(wordimage); 
+   
     // Get the information for the randomly selected word
     const infoIndex = arrayIndexOf(infoArray, randomWord);
-     wordInfo = infoArray[infoIndex];
-    console.log(wordInfo); // You can replace this with your logic to display the information
+    wordInfo = infoArray[infoIndex];
+    console.log(wordInfo); 
     
   }
   
@@ -161,6 +310,7 @@ function initiateImage() {
 }
 
 function gameStart() {
+  saveGameState();
 
     var btnstart = document.getElementById('playbtn');
     btnstart.style.display = 'none';
@@ -204,6 +354,7 @@ function LetKeys() {
     var randomword = document.getElementById("randomwordfinal");
     var wordinfodom = document.getElementById('wordinfo');
     var completeword = document.getElementById("randomword");
+    let imageofword = document.getElementById("imageword");
     var answarefinal;
    
     if (lowercasedRandomWord.includes(lowercasedClickedLetter)) {
@@ -253,16 +404,24 @@ function LetKeys() {
       winlose.style.display='flex';
       answare.style.display='none';
       completeword.style.display='none';
-      wordinfodom.innerHTML = wordInfo;
+      wordinfodom.innerHTML=wordInfo;
+      imageofword.src = wordimage;
       randomword.textContent = "The word was "+randomWord+" .";
-
-
     }
    }
    
    function restart(){
+    resetGameState();
+
     location.reload();
+    
    }
+
+ 
+
+
+
+   
   
   //              ^ How does this work ( about array itiniration and underscores)^:
 

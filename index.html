@@ -20,8 +20,10 @@
                 <div id="Hangmanimage"></div>
                 <div class="elementInitial">
                     <div id="userform">
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" required>
+                        <div class="labinputcont">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
                         <br>
                         <button type="submit" id="playbtn" onclick="startfunct();">Play</button>
                     </div>
@@ -39,6 +41,7 @@
                     <p id="randomwordfinal"></p>
                     <hr class="subseparation">
                     <p id="wordinfo"></p>
+                    <img id="imageword" src="" alt=""> <br>
                     <button onclick="restart();">Play again</button>
                 </div>
 
