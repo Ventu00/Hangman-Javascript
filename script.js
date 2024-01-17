@@ -397,6 +397,12 @@ function LetKeys() {
       if(randomWord.toLowerCase() === answarefinal.toLowerCase()){
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
+        randomWord="";
+        document.cookie = "randmonWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
       }
     }
 
