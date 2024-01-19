@@ -124,36 +124,19 @@ function getCookie(name) {
 function saveGameState() {
   setCookie("currentImageIndex", currentImageIndex, 1);
   setCookie("randomWord", randomWord, 1);
-  setCookie("underscores", underscores, 1);
   setCookie("selectedLetters", JSON.stringify(selectedLetters), 1);
-}
-
-// Función para cargar el estado del juego desde una cookie
-function loadGameState() {
-  currentImageIndex = parseInt(getCookie("currentImageIndex")) || 0;
-  randomWord = getCookie("randomWord") || getRandomWord(countriesArray);
-  underscores = getCookie("underscores") || "_ ".repeat(randomWord.length);
-  selectedLetters = JSON.parse(getCookie("selectedLetters")) || [];
 }
 
 // Function to reset game state
 function resetGameState() {
   currentImageIndex = 0;
   randomWord = getRandomWord(countriesArray);
-  underscores = "_ ".repeat(randomWord.length);
-}
-
-// Function to start or resume the game
-function startOrResumeGame() {
-  loadGameState();
-  playerName = getCookie("playername") || updatePlayerName();
-
-  if (playerName !== "") {
-    playerNameParagraph.textContent = "Player: " + playerName;
-    gameStart();
+  if(getCookie("underscores")==""){
+    underscores = "_ ".repeat(randomWord.length);
+  }else{
+    underscores=getCookie("underscores");
   }
 }
-
 /////////////////////////////////////////////////////////////////////////////////
 
 function startfunct(){
@@ -289,11 +272,15 @@ function startfunct(){
 
   const paragraphElement = document.getElementById("randomword");
 
-  underscores = "_ ".repeat(randomWord.length);
-  paragraphElement.innerHTML = underscores;
+
 
   function updateUnderscores() {
-    underscores = "_ ".repeat(randomWord.length);
+
+    if(getCookie("underscores")==""){
+      underscores = "_ ".repeat(randomWord.length);
+    }else{
+      underscores=getCookie("underscores");
+    }
     paragraphElement.innerHTML = underscores;
 
   }
@@ -384,7 +371,10 @@ function LetKeys() {
 
       }
     }
-    paragraphElement.innerHTML = underscores;
+    setCookie("underscores", underscores, 1);
+    paragraphElement.innerHTML = getCookie("underscores");
+    console.log(getCookie("underscores"));
+
     win();
   }
 
@@ -397,12 +387,10 @@ function LetKeys() {
       if(randomWord.toLowerCase() === answarefinal.toLowerCase()){
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
-        randomWord="";
-        document.cookie = "randmonWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
       }
     }
 
