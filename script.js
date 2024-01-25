@@ -1,7 +1,7 @@
 const hangmanImageDiv = document.getElementById("Hangmanimage");
-var images = ['images/hangman7.png','images/hangman6.png','images/hangman5.png','images/hangman4.png','images/hangman3.png','images/hangman2.png','images/hangman.png'];
+let images = ['images/hangman7.png','images/hangman6.png','images/hangman5.png','images/hangman4.png','images/hangman3.png','images/hangman2.png','images/hangman.png'];
 let currentImageIndex = 0;
-var answare = document.getElementById("auxwordansware");
+let answare = document.getElementById("auxwordansware");
 let randomArrayIndex = Math.floor(Math.random() * 3);
 let randomWord;
 let playerName;
@@ -97,6 +97,7 @@ const countryimagesarray = [
   'images/imageswords/country/Russia.jpg',
   'images/imageswords/country/Italy.jpg'
 ];
+let elapsedTime; 
 
 let selectedLetters = []; 
 
@@ -204,11 +205,11 @@ function startfunct(){
   }
 
   function getCategoryFromWord(word) {
-    if (countriesArray.includes(word.toLowerCase())) {
+    if (countriesArray.includes(word)) {
       return "Country";
-    } else if (fruitsArray.includes(word.toLowerCase())) {
+    } else if (fruitsArray.includes(word)) {
       return "Fruit";
-    } else if (colorsArray.includes(word.toLowerCase())) {
+    } else if (colorsArray.includes(word)) {
       return "Color";
     } else {
       console.error("Unexpected category");
@@ -297,11 +298,13 @@ function initiateImage() {
 }
 
 function gameStart() {
+  startTime = Date.now();
+
   saveGameState();
 
-    var btnstart = document.getElementById('playbtn');
+    let btnstart = document.getElementById('playbtn');
     btnstart.style.display = 'none';
-    var WordAndAnswareCont = document.getElementById('WordAndAnswareCont');
+    let WordAndAnswareCont = document.getElementById('WordAndAnswareCont');
     WordAndAnswareCont.style.display='block';
     var userform = document.getElementById('userform');
     userform.style.display='none';
@@ -310,7 +313,6 @@ function gameStart() {
     var letterscont = document.getElementById('letterscont');
     letterscont.style.display='block';
     
-
     initiateImage();
     updateUnderscores();
 }
@@ -336,13 +338,13 @@ function LetKeys() {
   function checkLetterInWord(clickedLetter) {
     const lowercasedRandomWord = randomWord.toLowerCase();
     const lowercasedClickedLetter = clickedLetter.toLowerCase();
-    var winlose = document.getElementById("winlose");
-    var endtittle = document.getElementById("endtittle");
-    var randomword = document.getElementById("randomwordfinal");
-    var wordinfodom = document.getElementById('wordinfo');
-    var completeword = document.getElementById("randomword");
+    let winlose = document.getElementById("winlose");
+    let endtittle = document.getElementById("endtittle");
+    let randomword = document.getElementById("randomwordfinal");
+    let wordinfodom = document.getElementById('wordinfo');
+    let completeword = document.getElementById("randomword");
     let imageofword = document.getElementById("imageword");
-    var answarefinal;
+    let answarefinal;
    
     if (lowercasedRandomWord.includes(lowercasedClickedLetter)) {
       ifYouAreWinning();
@@ -381,10 +383,18 @@ function LetKeys() {
     function lose(){
       finalcontnenttext();
       endtittle.textContent = ""+playerName+" you lost!";
+      document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
-
+timetotal
     function win(){
+      let timetotaluser=document.getElementById("timetotal");
       if(randomWord.toLowerCase() === answarefinal.toLowerCase()){
+        elapsedTime = (Date.now() - startTime) / 1000;
+        console.log(elapsedTime.toFixed(2));
+        timetotaluser.textContent = "You did it in "+elapsedTime.toFixed(2)+" seconds!";
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
         document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
