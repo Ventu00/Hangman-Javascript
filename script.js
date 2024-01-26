@@ -7,7 +7,7 @@ let randomWord;
 let playerName;
 let usernameInput = document.getElementById("username");
 let playerNameParagraph = document.getElementById("playername");
-const fruitsArray = ["apple","orange","banana","grape","kiwi","mango","strawberry","watermelon","pineapple","pear","cherry","peach"];
+const fruitsArray = ["apple","orange","banana","grape","kiwi","mango","strawberry","coconut","pineapple","pear","cherry","peach"];
 const fruitInfoArray = [
    "Apples are a type of fruit that grow on trees.",
    "Oranges are large, orange fruits that are commonly grown in Florida.",
@@ -16,7 +16,7 @@ const fruitInfoArray = [
    "Kiwis are small, hairy fruits that are native to New Zealand.",
    "Mangoes are tropical fruits that have a soft pulpy flesh.",
    "Strawberries are small, sweet, and tangy fruits.",
-   "Watermelons are large, juicy, and sweet fruits.",
+   "A coconut is a large fruit that grows on a tropical palm tree.",
    "Pineapples are tropical fruits that have a spiny skin and a sweet, slightly acidic taste.",
    "Pears are large, round fruits that are native to Europe.",
    "Cherries are small, tart fruits that are native to Asia.",
@@ -30,7 +30,7 @@ const fruitimagesarray = [
   'images/imageswords/Fruit/kiwi.jpg',
   'images/imageswords/Fruit/mango.jpg',
   'images/imageswords/Fruit/strawberry.jpg',
-  'images/imageswords/Fruit/watermelon.jpg',
+  'images/imageswords/Fruit/coconut.jpg',
   'images/imageswords/Fruit/pineapple.jpg',
   'images/imageswords/Fruit/pear.jpg',
   'images/imageswords/Fruit/cherry.jpg',
@@ -67,13 +67,14 @@ const colorimagesarray = [
   'images/imageswords/color/maroon.jpg',
   'images/imageswords/color/cyan.jpg'
 ];
-const countriesArray = ["USA","Canada","France","Japan","Australia","Brazil","India","Mexico","Germany","Spain","Russia","Italy"];
+
+const countriesArray = ["USA","Canada","France","Japan","Korea","Brazil","India","Mexico","Germany","Spain","Russia","Italy"];
 const countryInfoArray = [
   "The United States is the third largest country by land area.",
   "Canada is the second largest country by land area.",
   "France is known for its fine food, fashion, and culture.",
   "Japan is known for its technology, cars, and anime.",
-  "Australia is known for its wildlife and natural beauty.",
+  "South Korea is a country in East Asia that occupies the southern part of the Korean peninsula",
   "Brazil is known for its football, music, and Carnaval.",
   "India is known for its ancient history, rich culture, and varied cuisines.",
   "Mexico is known for its vibrant culture, history, and sports.",
@@ -88,7 +89,7 @@ const countryimagesarray = [
   'images/imageswords/country/Canada.jpg',
   'images/imageswords/country/France.jpg',
   'images/imageswords/country/Japan.jpg',
-  'images/imageswords/country/Australia.jpg',
+  'images/imageswords/country/corea.jpg',
   'images/imageswords/country/Brazil.jpg',
   'images/imageswords/country/India.jpg',
   'images/imageswords/country/Mexico.jpg',
@@ -383,11 +384,9 @@ function LetKeys() {
     function lose(){
       finalcontnenttext();
       endtittle.textContent = ""+playerName+" you lost!";
-      document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      restartcookies();
     }
+
 timetotal
     function win(){
       let timetotaluser=document.getElementById("timetotal");
@@ -397,10 +396,7 @@ timetotal
         timetotaluser.textContent = "You did it in "+elapsedTime.toFixed(2)+" seconds!";
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
-        document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        restartcookies();
       }
     }
 
@@ -414,9 +410,18 @@ timetotal
     }
    }
    
+
+function restartcookies(){
+  document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+}
+
    function restart(){
     resetGameState();
-
+    restartcookies();
     location.reload();
     
    }
