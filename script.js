@@ -98,6 +98,8 @@ const countryimagesarray = [
   'images/imageswords/country/Russia.jpg',
   'images/imageswords/country/Italy.jpg'
 ];
+  const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
 let elapsedTime; 
 
 let selectedLetters = []; 
@@ -319,22 +321,21 @@ function gameStart() {
 }
 
 function LetKeys() {
-    const lettersCont = document.getElementById("letterscont");
-    for (let charCode = 65; charCode <= 90; charCode++) { //charCode <= 90: The loop continues as long as the charCode is less than or equal to 'Z', which is 90.
+  const lettersCont = document.getElementById("letterscont");
+  alphabet.forEach(letter => {
+    const letterButton = document.createElement("button");
+    letterButton.textContent = letter;
+    letterButton.classList.add("letter-btn");
 
-      const letter = String.fromCharCode(charCode);
-      const letterButton = document.createElement("button");
-      letterButton.textContent = letter;
-      letterButton.classList.add("letter-btn");//transforms the char into string of the letter and creates a button
+    letterButton.addEventListener("click", function() {
+      letterButton.disabled = true;
+      letterButton.style.backgroundColor = "grey";
+      checkLetterInWord(letter);
+    });
 
-      letterButton.addEventListener("click", function() {
-        letterButton.disabled=true;
-        letterButton.style.backgroundColor="grey";
-        checkLetterInWord(letter);
-      });
-      lettersCont.appendChild(letterButton);
-    }
-  }
+    lettersCont.appendChild(letterButton);
+  });
+}
 
   function checkLetterInWord(clickedLetter) {
     const lowercasedRandomWord = randomWord.toLowerCase();
