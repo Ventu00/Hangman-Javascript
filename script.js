@@ -126,7 +126,6 @@ function getCookie(name) {
 }
 
 function saveGameState() {
-  setCookie("currentImageIndex", currentImageIndex, 1);
   setCookie("randomWord", randomWord, 1);
   setCookie("selectedLetters", JSON.stringify(selectedLetters), 1);
 }
@@ -134,6 +133,8 @@ function saveGameState() {
 // Function to reset game state
 function resetGameState() {
   currentImageIndex = 0;
+imagePath = "images/hangman7.png";
+setCookie("imagePath", "images/hangman7.png", 1)
   randomWord = getRandomWord(countriesArray);
   if(getCookie("underscores")==""){
     underscores = "_ ".repeat(randomWord.length);
@@ -161,6 +162,9 @@ function startfunct(){
   if (playerName !== "") {
       gameStart();
   }
+  setCookie('userEntered', 'true', 1);
+
+  applyStylesIfUserEntered();
 }
 
 
@@ -289,16 +293,27 @@ function startfunct(){
 
   }
 
+  function initiateImage() {
+    currentImageIndex[0];
 
-function initiateImage() {
-    const imagePath = images[currentImageIndex];
+    let imagePath;
+
+    const cookieImagePath = getCookie("imagePath");
+
+    if (cookieImagePath != null && cookieImagePath.trim() !== "") {
+        imagePath = cookieImagePath;
+    } else {
+        imagePath = images[currentImageIndex];
+    }
 
     const imgElement = document.createElement('img');
     imgElement.src = imagePath;
     imgElement.alt = 'Hangman';
     hangmanImageDiv.innerHTML = '';
     hangmanImageDiv.appendChild(imgElement);
+    console.log(imagePath);
 }
+
 
 function gameStart() {
   startTime = Date.now();
@@ -358,10 +373,12 @@ function LetKeys() {
   function ifYouAreLosing(){
     console.log("Letter not found: " + clickedLetter);
     currentImageIndex++; // Increment the image index
+
     if (currentImageIndex < images.length) {
-      initiateImage();
+        initiateImage(); // Llama a initiateImage solo cuando el índice está dentro de los límites
+        setCookie("imagePath", images[currentImageIndex], 1); // Actualiza la cookie con la nueva ruta
     } else {
-      lose();
+        lose();
     }
   }
 
@@ -383,6 +400,8 @@ function LetKeys() {
   }
 
     function lose(){
+      currentImageIndex[0];
+
       finalcontnenttext();
       endtittle.textContent = ""+playerName+" you lost!";
       restartcookies();
@@ -409,14 +428,15 @@ timetotal
       imageofword.src = wordimage;
       randomword.textContent = "The word was "+randomWord+" .";
     }
+
    }
    
-
 function restartcookies(){
+  document.cookie = "ImagePath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  initiateImage();
 
 }
 
@@ -442,5 +462,17 @@ function restartcookies(){
 
   //After making changes to the array, you can convert the array back to a string with the join() method.
 
+  function applyStylesIfUserEntered() {
+    const hasEntered = getCookie('userEntered');
+
+    if (hasEntered) {
+
+   
+      gameStart()
+    }
+}
+applyStylesIfUserEntered();
+
   LetKeys();
+
 initiateImage();
