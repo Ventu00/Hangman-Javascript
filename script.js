@@ -1,10 +1,10 @@
 const hangmanImageDiv = document.getElementById("Hangmanimage");
 let images = ['images/hangman7.png','images/hangman6.png','images/hangman5.png','images/hangman4.png','images/hangman3.png','images/hangman2.png','images/hangman.png'];
-let currentImageIndex = 0;
+let currentImageIndex = parseInt(getCookie("currentImageIndex")) || 0;
 let answare = document.getElementById("auxwordansware");
 let randomArrayIndex = Math.floor(Math.random() * 3);
 let randomWord;
-let playerName;
+let playerName= getCookie("playername")||"";
 let usernameInput = document.getElementById("username");
 let playerNameParagraph = document.getElementById("playername");
 const fruitsArray = ["apple","orange","banana","grape","kiwi","mango","strawberry","coconut","pineapple","pear","cherry","peach"];
@@ -132,20 +132,27 @@ function saveGameState() {
 
 // Function to reset game state
 function resetGameState() {
-  currentImageIndex = 0;
-imagePath = "images/hangman7.png";
-setCookie("imagePath", "images/hangman7.png", 1)
+  initiateImage();
+
+  currentImageIndex = 0; 
+  imagePath = "images/hangman7.png";
+  setCookie("imagePath", "images/hangman7.png", 1);
   randomWord = getRandomWord(countriesArray);
-  if(getCookie("underscores")==""){
-    underscores = "_ ".repeat(randomWord.length);
-  }else{
-    underscores=getCookie("underscores");
+  if (getCookie("underscores") == "") {
+      underscores = "_ ".repeat(randomWord.length);
+  } else {
+      underscores = getCookie("underscores");
   }
 }
+
 /////////////////////////////////////////////////////////////////////////////////
 
 function startfunct(){
   let savedPlayerName = getCookie("playername");
+
+  if (cookieImagePath != null && cookieImagePath.trim() !== "") {
+    imagePath = cookieImagePath;
+}
 
   if (savedPlayerName !== "") {
       playerName = savedPlayerName;
@@ -174,6 +181,7 @@ function startfunct(){
 
     if(username !==""){
       playerNameParagraph.textContent = "Player: " + username;
+      saveGameStats(randomWord, username, 0, 0);
     }else{
       alert("Please enter a valid name");
       usernameInput.style.backgroundColor="#E75C65";
@@ -292,19 +300,12 @@ function startfunct(){
     paragraphElement.innerHTML = underscores;
 
   }
+  let imagePath;
+  let cookieImagePath = getCookie("imagePath");
 
   function initiateImage() {
-    currentImageIndex[0];
-
-    let imagePath;
-
-    const cookieImagePath = getCookie("imagePath");
-
-    if (cookieImagePath != null && cookieImagePath.trim() !== "") {
-        imagePath = cookieImagePath;
-    } else {
-        imagePath = images[currentImageIndex];
-    }
+ 
+    imagePath = getCookie("imagePath") || images[currentImageIndex];
 
     const imgElement = document.createElement('img');
     imgElement.src = imagePath;
@@ -312,10 +313,15 @@ function startfunct(){
     hangmanImageDiv.innerHTML = '';
     hangmanImageDiv.appendChild(imgElement);
     console.log(imagePath);
+    setCookie("imagePath", imagePath, 1);
+
+
 }
 
 
+
 function gameStart() {
+  
   startTime = Date.now();
 
   saveGameState();
@@ -331,7 +337,6 @@ function gameStart() {
     var letterscont = document.getElementById('letterscont');
     letterscont.style.display='block';
     
-    initiateImage();
     updateUnderscores();
 }
 
@@ -352,6 +357,7 @@ function LetKeys() {
   });
 }
 
+let lastfail;
   function checkLetterInWord(clickedLetter) {
     const lowercasedRandomWord = randomWord.toLowerCase();
     const lowercasedClickedLetter = clickedLetter.toLowerCase();
@@ -366,21 +372,27 @@ function LetKeys() {
     if (lowercasedRandomWord.includes(lowercasedClickedLetter)) {
       ifYouAreWinning();
     } else {
+      currentImageIndex++;
+      setCookie("currentImageIndex",currentImageIndex,1);
       ifYouAreLosing();
     }
 /////////////////////////////////////////////////////////////////////////////
 
-  function ifYouAreLosing(){
-    console.log("Letter not found: " + clickedLetter);
-    currentImageIndex++; // Increment the image index
+function ifYouAreLosing() {
 
-    if (currentImageIndex < images.length) {
-        initiateImage(); // Llama a initiateImage solo cuando el índice está dentro de los límites
-        setCookie("imagePath", images[currentImageIndex], 1); // Actualiza la cookie con la nueva ruta
-    } else {
-        lose();
-    }
+  console.log("Letter not found: " + clickedLetter);
+  initiateImage();
+
+  if (currentImageIndex < images.length) {
+      setCookie("imagePath", images[currentImageIndex], 1);
+      lastfail = images[currentImageIndex];
+      location.reload();
+
+  } else {
+      lose();
   }
+}
+
 
   function ifYouAreWinning(){
     for (let i = 0; i < randomWord.length; i++) {
@@ -416,6 +428,13 @@ timetotal
         timetotaluser.textContent = "You did it in "+elapsedTime.toFixed(2)+" seconds!";
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
+
+        // Llamada cuando el jugador gana
+saveGameStats(randomWord, playerName, elapsedTime, currentImageIndex);
+
+// Llamada para mostrar el ranking
+getAndDisplayRanking(randomWord);
+
         restartcookies();
       }
     }
@@ -432,7 +451,7 @@ timetotal
    }
    
 function restartcookies(){
-  document.cookie = "ImagePath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "currentImageIndex=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "randomWord=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "underscores=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "selectedLetters=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -446,8 +465,6 @@ function restartcookies(){
     location.reload();
     
    }
-
- 
 
 
 
@@ -463,14 +480,73 @@ function restartcookies(){
   //After making changes to the array, you can convert the array back to a string with the join() method.
 
   function applyStylesIfUserEntered() {
+
+   imagePath = setCookie("imagePath",lastfail,1);
     const hasEntered = getCookie('userEntered');
 
     if (hasEntered) {
 
    
-      gameStart()
+      gameStart();
     }
 }
+
+function saveGameStats(word, playerName, elapsedTime, errorCount) {
+  // Obtener los datos antiguos o inicializar un array vacío si no hay datos
+  let rankings = JSON.parse(localStorage.getItem(word)) || [];
+
+  // Añadir nueva entrada al ranking
+  rankings.push({ playerName, elapsedTime, errorCount });
+
+  // Ordenar el ranking por número de errores y tiempo (ascendente)
+  rankings.sort((a, b) => {
+    if (a.errorCount !== b.errorCount) {
+      return a.errorCount - b.errorCount; // Ordenar por errores ascendentes
+    }
+    return a.elapsedTime - b.elapsedTime; // Si hay empate, ordenar por tiempo ascendente
+  });
+
+  // Limitar el ranking a los 3 primeros
+  rankings = rankings.slice(0, 3);
+
+  // Guardar el ranking actualizado en el almacenamiento local
+  localStorage.setItem(word, JSON.stringify(rankings));
+}
+
+function getAndDisplayRanking(word) {
+  const rankings = JSON.parse(localStorage.getItem(word));
+  const rankingContainer = document.getElementById('ranking-container');
+  const rankingBody = document.getElementById('ranking-body');
+
+  // Limpiar contenido anterior
+  rankingBody.innerHTML = '';
+
+  if (rankings && rankings.length > 0) {
+    rankings.forEach((entry, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${entry.playerName}</td>
+        <td>${entry.elapsedTime}s</td>
+        <td>${entry.errorCount}</td>
+      `;
+      rankingBody.appendChild(row);
+    });
+
+    // Mostrar el contenedor del ranking
+    rankingContainer.style.display = 'block';
+  } else {
+    // Ocultar el contenedor si no hay datos de ranking
+    rankingContainer.style.display = 'none';
+  }
+}
+
+
+
+
+
+
+
 applyStylesIfUserEntered();
 
   LetKeys();
