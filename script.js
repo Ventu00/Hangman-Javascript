@@ -541,7 +541,19 @@ function getAndDisplayRanking(word) {
   }
 }
 
+var rankingContainer = document.getElementById("ranking-container");
+var rankingtable = document.getElementById("ranking-table");
 
+rankingContainer.style.display = "none";
+rankingtable.style.display = "none";
+
+
+// Función para mostrar/ocultar el ranking al hacer clic en el botón "Ranking"
+function showRanking() {
+        rankingContainer.style.display = "block";
+        rankingtable.style.display = "block";
+
+}
 
 
 
