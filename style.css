@@ -3,6 +3,9 @@ body{
     
 }
 
+
+
+
 h1{
     font-family: 'Federo', sans-serif;
     text-align: center;
@@ -158,6 +161,10 @@ position: absolute;
     backdrop-filter: blur(10px);
  }
 
+ .winlosecont{
+    padding-left: 100px;
+ }
+
 
  .winlose div {
     text-align: center;
@@ -185,9 +192,19 @@ position: absolute;
     margin-bottom: 20px;
  }
 
- #ranking-container{
+ #ranking-container {
     display: none;
-    text-align: center;
-    align-items: center;
+    font-family: 'Arsenal', sans-serif;
+    border: solid 2px #F8F8F8;
     color: #F8F8F8;
- }
+    align-items: center;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999; /* Set a high z-index value to ensure it appears above other elements */
+    background-color: rgba(0, 16, 1, 0.866); /* Optional: Set background color */
+    padding: 20px; /* Optional: Add padding for better readability */
+  }
+   

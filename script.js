@@ -305,7 +305,7 @@ function startfunct(){
 
   function initiateImage() {
  
-    imagePath = getCookie("imagePath") || images[currentImageIndex];
+    imagePath = images[currentImageIndex] || getCookie("imagePath");
 
     const imgElement = document.createElement('img');
     imgElement.src = imagePath;
@@ -342,20 +342,36 @@ function gameStart() {
 
 function LetKeys() {
   const lettersCont = document.getElementById("letterscont");
+
+  const clickedLetters = JSON.parse(localStorage.getItem("clickedLetters")) || {};
+
+  // Iterate through each letter in the alphabet
   alphabet.forEach(letter => {
     const letterButton = document.createElement("button");
     letterButton.textContent = letter;
     letterButton.classList.add("letter-btn");
 
+    // Check if the letter has been clicked previously
+    if (clickedLetters[letter]) {
+      letterButton.disabled = true;
+      letterButton.style.backgroundColor = "grey";
+    }
+
+    // Add click event listener to the letter button
     letterButton.addEventListener("click", function() {
       letterButton.disabled = true;
       letterButton.style.backgroundColor = "grey";
+
+      clickedLetters[letter] = true;
+      localStorage.setItem("clickedLetters", JSON.stringify(clickedLetters));
+
       checkLetterInWord(letter);
     });
 
     lettersCont.appendChild(letterButton);
   });
 }
+
 
 let lastfail;
   function checkLetterInWord(clickedLetter) {
@@ -379,17 +395,19 @@ let lastfail;
 /////////////////////////////////////////////////////////////////////////////
 
 function ifYouAreLosing() {
-
   console.log("Letter not found: " + clickedLetter);
   initiateImage();
 
   if (currentImageIndex < images.length) {
-      setCookie("imagePath", images[currentImageIndex], 1);
-      lastfail = images[currentImageIndex];
-      location.reload();
+    setCookie("imagePath", images[currentImageIndex], 1);
+    lastfail = images[currentImageIndex];
+    
+    let imageofword = document.getElementById("imageword");
+
+    imageofword.src = lastfail;
 
   } else {
-      lose();
+    lose();
   }
 }
 
@@ -429,10 +447,8 @@ timetotal
         finalcontnenttext();
         endtittle.textContent = ""+playerName+" you won!";
 
-        // Llamada cuando el jugador gana
 saveGameStats(randomWord, playerName, elapsedTime, currentImageIndex);
 
-// Llamada para mostrar el ranking
 getAndDisplayRanking(randomWord);
 
         restartcookies();
@@ -463,7 +479,7 @@ function restartcookies(){
     resetGameState();
     restartcookies();
     location.reload();
-    
+    localStorage.removeItem("clickedLetters");
    }
 
 
@@ -492,54 +508,47 @@ function restartcookies(){
 }
 
 function saveGameStats(word, playerName, elapsedTime, errorCount) {
-  // Obtener los datos antiguos o inicializar un array vacío si no hay datos
+  // Retrieve old data or initialize an empty array if there is no data
   let rankings = JSON.parse(localStorage.getItem(word)) || [];
 
-  // Añadir nueva entrada al ranking
+  // Add a new entry to the ranking
   rankings.push({ playerName, elapsedTime, errorCount });
 
-  // Ordenar el ranking por número de errores y tiempo (ascendente)
-  rankings.sort((a, b) => {
-    if (a.errorCount !== b.errorCount) {
-      return a.errorCount - b.errorCount; // Ordenar por errores ascendentes
-    }
-    return a.elapsedTime - b.elapsedTime; // Si hay empate, ordenar por tiempo ascendente
-  });
+  // Sort the ranking by error count and elapsed time (ascending)
+  rankings.sort((a, b) => a.errorCount - b.errorCount || a.elapsedTime - b.elapsedTime);
 
-  // Limitar el ranking a los 3 primeros
-  rankings = rankings.slice(0, 3);
+  // Limit the ranking to the top 3 entries
+  rankings.splice(3);
 
-  // Guardar el ranking actualizado en el almacenamiento local
+  // Save the updated ranking to local storage
   localStorage.setItem(word, JSON.stringify(rankings));
 }
+
+
+
 
 function getAndDisplayRanking(word) {
   const rankings = JSON.parse(localStorage.getItem(word));
   const rankingContainer = document.getElementById('ranking-container');
   const rankingBody = document.getElementById('ranking-body');
 
-  // Limpiar contenido anterior
+  // Clear previous content
   rankingBody.innerHTML = '';
 
   if (rankings && rankings.length > 0) {
-    rankings.forEach((entry, index) => {
+    for (let i = 0; i < rankings.length; i++) {
+      const entry = rankings[i];
       const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${entry.playerName}</td>
-        <td>${entry.elapsedTime}s</td>
-        <td>${entry.errorCount}</td>
-      `;
+      row.innerHTML = '<td>' + (i + 1) + '</td><td>' + entry.playerName + '</td><td>' + entry.elapsedTime + 's</td><td>' + entry.errorCount + '</td>';
       rankingBody.appendChild(row);
-    });
+    }
 
-    // Mostrar el contenedor del ranking
-    rankingContainer.style.display = 'block';
   } else {
-    // Ocultar el contenedor si no hay datos de ranking
+    // Hide the container if there is no ranking data
     rankingContainer.style.display = 'none';
   }
 }
+
 
 var rankingContainer = document.getElementById("ranking-container");
 var rankingtable = document.getElementById("ranking-table");

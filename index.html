@@ -35,7 +35,7 @@
                 <div id="letterscont"></div>
             
                 <div id="winlose" class="winlose">
-                    <div class="">
+                    <div class="winlosecont">
                     <h1 id="endtittle"></h1>
                     <p id="timetotal"></p>
                     <hr class="separation">
@@ -45,28 +45,28 @@
                     <img id="imageword" src="" alt=""> <br>
                     <button onclick="restart();">Play again</button>
                     <button onclick="showRanking();">Ranking</button>
-
+                    </div>
                 </div>
 
                 </div>
             </div>
-            <div id="ranking-container">
-                <h2>Word Ranking</h2>
-                <table id="ranking-table">
-                    <thead>
-                        <tr>
-                            <th>Position</th>
-                            <th>Player Name</th>
-                            <th>Time</th>
-                            <th>Errors</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-body"></tbody>
-                </table>
-            </div>
+
         </div>
     </div>
-   
+    <div id="ranking-container">
+        <h2>Word Ranking</h2>
+        <table id="ranking-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Player Name</th>
+                    <th>Time</th>
+                    <th>Errors</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+        </table>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
