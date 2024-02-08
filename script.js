@@ -565,6 +565,18 @@ function showRanking() {
 }
 
 
+function changename() {
+  // Pide al usuario que ingrese un nuevo nombre
+  let newPlayerName = prompt("Enter your new name:");
+
+  // Verifica si el usuario ingresó un nombre
+  if (newPlayerName !== null) {
+    // Establece el valor de la cookie 'playername' con el nuevo nombre
+    setCookie("playername", newPlayerName, 1);
+  }
+}
+
+
 
 
 
