@@ -508,20 +508,25 @@ function restartcookies(){
 }
 
 function saveGameStats(word, playerName, elapsedTime, errorCount) {
-  // Retrieve old data or initialize an empty array if there is no data
+  // Retrieve old data or initialize an empty array if there is no data by word id
   let rankings = JSON.parse(localStorage.getItem(word)) || [];
 
   // Add a new entry to the ranking
   rankings.push({ playerName, elapsedTime, errorCount });
 
-  // Sort the ranking by error count and elapsed time (ascending)
-  rankings.sort((a, b) => a.errorCount - b.errorCount || a.elapsedTime - b.elapsedTime);
-
-  // Limit the ranking to the top 3 entries
+  // elapsed time (ascending)
+  rankings.sort(function(a, b) {
+    if (a.errorCount === b.errorCount) {
+      return a.elapsedTime - b.elapsedTime; 
+    }
+    return a.errorCount - b.errorCount; 
+  });
+  
+  // top 3 
   rankings.splice(3);
 
   // Save the updated ranking to local storage
-  localStorage.setItem(word, JSON.stringify(rankings));
+  localStorage.setItem(JSON.stringify(rankings));
 }
 
 
@@ -557,7 +562,6 @@ rankingContainer.style.display = "none";
 rankingtable.style.display = "none";
 
 
-// Función para mostrar/ocultar el ranking al hacer clic en el botón "Ranking"
 function showRanking() {
         rankingContainer.style.display = "block";
         rankingtable.style.display = "block";
@@ -566,7 +570,6 @@ function showRanking() {
 
 
 function changename() {
-  // Pide al usuario que ingrese un nuevo nombre
   let newPlayerName = prompt("Enter your new name:");
 
   // Verifica si el usuario ingresó un nombre
@@ -574,6 +577,9 @@ function changename() {
     // Establece el valor de la cookie 'playername' con el nuevo nombre
     setCookie("playername", newPlayerName, 1);
   }
+
+  saveGameStats(randomWord, newPlayerName, 0, 0);
+
 }
 
 
