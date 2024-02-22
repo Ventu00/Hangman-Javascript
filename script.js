@@ -130,7 +130,6 @@ function saveGameState() {
   setCookie("selectedLetters", JSON.stringify(selectedLetters), 1);
 }
 
-// Function to reset game state
 function resetGameState() {
   initiateImage();
 
@@ -525,9 +524,10 @@ function saveGameStats(word, playerName, elapsedTime, errorCount) {
   // top 3 
   rankings.splice(3);
 
-  // Save the updated ranking to local storage
-  localStorage.setItem(JSON.stringify(rankings));
+  // Save the updated ranking to local storage with the word as key
+  localStorage.setItem(word, JSON.stringify(rankings));
 }
+
 
 
 
