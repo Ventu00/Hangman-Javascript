@@ -279,7 +279,7 @@ function startfunct(){
         return i;
       }
     }
-    return -1;
+    alert("Element not found in the array");
   }
   
   // Call the function to select a random category and display information
@@ -417,7 +417,7 @@ function ifYouAreLosing() {
         underscores = underscores.split(' ');
         underscores[i] = clickedLetter;
         underscores = underscores.join(' ');
-        answarefinal = underscores.replace(/ /g, '');
+        answarefinal = underscores.replace(/ /g, ''); /// /g is used in conjunction with JavaScript's replace() method to find and replace all instances of a white space with an empty string.
 
       }
     }
@@ -524,7 +524,7 @@ function saveGameStats(word, playerName, elapsedTime, errorCount) {
   // top 3 
   rankings.splice(3);
 
-  // Save the updated ranking to local storage with the word as key
+  // Save the updated ranking with the word as key
   localStorage.setItem(word, JSON.stringify(rankings));
 }
 
